@@ -57,6 +57,8 @@ def sim_pearson(prefs,p1,p2):
   return r
 
 # Returns the best n matches for a given person from the pref dictionary
+# n (optional) defaults to 5
+# similarity (optional) is the similarity model you wish to use defaults to pearson
 def topMatches(prefs,person,n=5,similarity=sim_pearson):
   scores=[(similarity(prefs,person,other),other) for other in prefs if other != person]
 
@@ -86,3 +88,12 @@ def getRecommendations(prefs,person,similarity=sim_pearson):
   rankings.sort()
   rankings.reverse()
   return rankings
+
+
+def transformPrefs(prefs):
+  result={}
+  for person in prefs:
+    for item in prefs[person]:
+      result.setdefault(item,{})
+      result[item][person]=prefs[person][item]
+  return result
