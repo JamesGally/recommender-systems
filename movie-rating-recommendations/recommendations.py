@@ -9,6 +9,12 @@ critics={
 'Jack Matthews':{'Lady in the water': 3.0, 'Snakes on a Plane': 4.0, 'Superman Returns': 5.0, 'You, Me and Dupree': 3.5, 'The Night Listener': 3.0},
 'Toby':{'Snakes on a Plane': 4.5, 'Superman Returns': 4.0, 'You, Me and Dupree': 1.0}}
 
+
+#*******************************************************************************
+#****************************  Similarity Metrics  *****************************
+#*******************************************************************************
+
+
 # Euclidean Distance Score
 def sim_distance(prefs, p1, p2):
   # List of shared items
@@ -56,6 +62,12 @@ def sim_pearson(prefs,p1,p2):
   r=num/den
   return r
 
+
+#*******************************************************************************
+#*******************  User Based Collaborative Filtering  **********************
+#*******************************************************************************
+
+
 # Returns the best n matches for a given person from the pref dictionary
 # n (optional) defaults to 5
 # similarity (optional) is the similarity model you wish to use defaults to pearson
@@ -65,6 +77,7 @@ def topMatches(prefs,person,n=5,similarity=sim_pearson):
   scores.sort()
   scores.reverse()
   return scores[0:n]
+
 
 def getRecommendations(prefs,person,similarity=sim_pearson):
   totals={}
@@ -90,10 +103,60 @@ def getRecommendations(prefs,person,similarity=sim_pearson):
   return rankings
 
 
+#*******************************************************************************
+#*******************  Item Based Collaborative Filtering  **********************
+#*******************************************************************************
+
+# Creates a dictionary of items and their n most similar items
+def calculateSimilarItems(prefs,n=10):
+  result={}
+  itemPrefs=transformPrefs(prefs)
+  c=0
+  for item in itemPrefs:
+    c+=1
+    if c%3==0: print "%d / %d" % (c,len(itemPrefs))
+    scores=topMatches(itemPrefs,item,n=n,similarity=sim_distance)
+    result[item]=scores
+
+  return result
+
+
+def getRecommendedItems(prefs,itemMatch,user):
+  userRatings=prefs[user]
+  scores={}
+  totalSim={}
+
+  # Loop over user items
+  for (item,rating) in userRatings.items():
+
+    # Loop over items similar to this one
+    for (similarity,item2) in itemMatch[item]:
+
+      # If user has already saw this movie then skip
+      if item2 in userRatings: continue
+
+      scores.setdefault(item2,0)
+      scores[item2]+=similarity*rating
+
+      totalSim.setdefault(item2,0)
+      totalSim[item2]+=similarity
+
+  rankings=[(score/totalSim[item],item) for (item,score) in scores.items()]
+
+  rankings.sort()
+  rankings.reverse()
+  return rankings
+
+#*******************************************************************************
+#***************************  Utility Functions  *******************************
+#*******************************************************************************
+
+# Flips dictionary from person -> item scores to item -> person scores
 def transformPrefs(prefs):
   result={}
   for person in prefs:
     for item in prefs[person]:
       result.setdefault(item,{})
+      # flip item and person
       result[item][person]=prefs[person][item]
   return result
