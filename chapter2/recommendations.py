@@ -175,6 +175,27 @@ def getRecommendedItems(prefs,itemMatch,user):
   return rankings
 
 #*******************************************************************************
+#****************************  MovieLens Data  *********************************
+#*******************************************************************************
+def loadMovieLens(path='./data/movielens/'):
+
+  # Get Movie Titles
+  movies={}
+  for line in open(path+'u.item'):
+    (id,title)=line.split('|')[0:2]
+    movies[id]=title
+
+  prefs={}
+  for line in open(path+'u.data'):
+    (user,movieid,rating,ts)=line.split('\t')
+    prefs.setdefault(user,{})
+    prefs[user][movies[movieid]]=float(rating)
+
+  return prefs
+
+
+
+#*******************************************************************************
 #***************************  Utility Functions  *******************************
 #*******************************************************************************
 
