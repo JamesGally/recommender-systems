@@ -63,32 +63,32 @@ def sim_pearson(prefs,p1,p2):
   return r
 
 
-  # Tanimoto Correlation Score
-  def sim_tanimoto(prefs,p1,p2):
-    # List of shared items
-    si={}
-    for item in prefs[p1]:
-      if item in prefs[p2]:
-        si[item]=1
+# Tanimoto Correlation Score
+def sim_tanimoto(prefs,p1,p2):
+  # List of shared items
+  si={}
+  for item in prefs[p1]:
+    if item in prefs[p2]:
+      si[item]=1
 
-    # If no ratings in common, return 0
-    n = len(si)
-    if n==0: return 0
+  # If no ratings in common, return 0
+  n = len(si)
+  if n==0: return 0
 
-    # Sum of Squares
-    sum1Sq = sum([pow(prefs[p1][item],2) for item in si])
-    sum2Sq = sum([pow(prefs[p2][item],2) for item in si])
+  # Sum of Squares
+  sum1Sq = sum([pow(prefs[p1][item],2) for item in si])
+  sum2Sq = sum([pow(prefs[p2][item],2) for item in si])
 
-    # Sum of products
-    pSum = sum([prefs[p1][item]*prefs[p2][item] for item in si])
+  # Sum of products
+  pSum = sum([prefs[p1][item]*prefs[p2][item] for item in si])
 
-    # Calculate Pearson Score
-    num=pSum
-    den=sum1Sq+sum2Sq-pSum
-    if den==0: return 0
+  # Calculate Pearson Score
+  num=pSum
+  den=sum1Sq+sum2Sq-pSum
+  if den==0: return 0
 
-    r=num/den
-    return r
+  r=num/den
+  return r
 
 #*******************************************************************************
 #*******************  User Based Collaborative Filtering  **********************
