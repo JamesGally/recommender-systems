@@ -1,4 +1,4 @@
-# Movie rating recommendations
+# Making Recommendations
 
 Uses the following two Similarity systems:
 
@@ -6,7 +6,7 @@ Uses the following two Similarity systems:
 - Pearson Correlation Score
 
 ```
-cd movie-rating-recommendations
+cd chapter2
 python
 import recommendations
 
