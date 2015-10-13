@@ -1,9 +1,10 @@
 # Making Recommendations
 
-Uses the following two Similarity systems:
+Uses the following 3 Similarity systems:
 
 - Euclidean Distance Score
 - Pearson Correlation Score
+- Tanimoto Similarity Score
 
 ```
 cd chapter2
